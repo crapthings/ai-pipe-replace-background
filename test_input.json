@@ -1,11 +1,13 @@
 {
     "input": {
         "debug": true,
-        "input_url": "https://naivelabs-tmp.s3.us-west-1.amazonaws.com/9G4tamL3YrVE.png",
+        "input_url": "https://naivelabs-tmp.s3.us-west-1.amazonaws.com/OxmbF_-xN3yA.png",
         "upload_url": "https://naivelabs-tmp.s3.us-west-1.amazonaws.com/3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAVS3UGYJ4VVPOZ2X5%2F20231126%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20231126T071514Z&X-Amz-Expires=3600&X-Amz-Signature=8af1ce2bf7d7d3f02f2bf093ae7cda58b2ad5e1b1d6d361ddd34000ec5f8b9e2&X-Amz-SignedHeaders=host&x-id=PutObject",
-        "prompt": "a beautiful naked lady, full body, 8k, hdr, photo",
-        "seed": 0,
-        "strength": 0.7
+        "prompt": "Modern Art Museum: Contemporary museum setting, architectural features, natural light, capturing a fusion of fashion, culture, and modern aesthetics, ultra realistic, 4k, detailed",
+        "negative_prompt": "cartoon, animi, blurry background",
+        "num_inference_steps": 100,
+        "guidance_scale": 7,
+        "strength": 1
     },
     "webhook": "http://localhost:3000/api/runpod-webhook"
 }

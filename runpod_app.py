@@ -5,9 +5,11 @@ import torch
 from diffusers.utils import load_image
 import runpod
 
-from utils import extract_origin_pathname, upload_image
+from utils import extract_origin_pathname, upload_image, rounded_size
 from inpainting import inpainting
+from img2img import img2img
 from remove_background import remove_background
+from upscaler import upscale
 
 def run (job, _generator = None):
     # prepare task
@@ -22,28 +24,53 @@ def run (job, _generator = None):
 
         prompt = _input.get('prompt', 'a dog')
         negative_prompt = _input.get('negative_prompt', '')
-        num_inference_steps = _input.get('num_inference_steps', 50)
-        guidance_scale = _input.get('guidance_scale', 7.0)
-        strength = _input.get('strength', 0.5)
+        num_inference_steps = _input.get('num_inference_steps', 70)
+        guidance_scale = _input.get('guidance_scale', 13.0)
+        strength = _input.get('strength', 1)
         seed = _input.get('seed')
 
         input_image = load_image(input_url).convert('RGB')
 
+        input_copy = input_image.copy()
+
+        limit = 768
+
+        input_copy.thumbnail([limit, limit])
+
+        originalWidth, originalHeight = input_copy.size
+        renderWidth, renderHeight = rounded_size(originalWidth, originalHeight)
+
         mask_image = remove_background(
-            input_image = input_image,
+            input_image = input_copy,
         )
 
         if seed is not None:
             _generator = torch.Generator(device = 'cuda').manual_seed(seed)
 
         output_image = inpainting(
-            image = input_image,
+            image = input_copy,
             mask_image = mask_image,
+            width = renderWidth,
+            height = renderHeight,
             prompt = prompt,
             negative_prompt = negative_prompt,
             num_inference_steps = math.ceil(num_inference_steps / strength),
             guidance_scale = guidance_scale,
             strength = strength,
+            generator = _generator
+        ).images[0]
+
+        # output_image = output_image.resize(input_image.size)
+
+        output_image = upscale(output_image)
+
+        output_image = img2img(
+            image = output_image,
+            prompt = prompt,
+            negative_prompt = negative_prompt,
+            num_inference_steps = math.ceil(num_inference_steps / strength),
+            guidance_scale = guidance_scale,
+            strength = 0.18,
             generator = _generator
         ).images[0]
 
