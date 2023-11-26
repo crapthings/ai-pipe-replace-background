@@ -6,7 +6,8 @@ from diffusers.utils import load_image
 import runpod
 
 from utils import extract_origin_pathname, upload_image
-from img2img import img2img
+from inpainting import inpainting
+from remove_background import remove_background
 
 def run (job, _generator = None):
     # prepare task
@@ -28,11 +29,16 @@ def run (job, _generator = None):
 
         input_image = load_image(input_url).convert('RGB')
 
+        mask_image = remove_background(
+            input_image = input_image,
+        )
+
         if seed is not None:
             _generator = torch.Generator(device = 'cuda').manual_seed(seed)
 
-        output_image = img2img(
+        output_image = inpainting(
             image = input_image,
+            mask_image = mask_image,
             prompt = prompt,
             negative_prompt = negative_prompt,
             num_inference_steps = math.ceil(num_inference_steps / strength),
