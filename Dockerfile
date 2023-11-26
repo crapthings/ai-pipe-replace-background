@@ -9,6 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 WORKDIR /workspace
 
 COPY scripts ./scripts
+COPY transparent-background ./transparent-background
 COPY *.py .
 
 RUN apt-get update && apt-get install git ffmpeg libsm6 libxext6 -y
