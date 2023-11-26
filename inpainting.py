@@ -13,6 +13,7 @@ inpaintingPipe = AutoPipelineForInpainting.from_pretrained(
 
 inpaintingPipe.scheduler = EulerAncestralDiscreteScheduler.from_config(inpaintingPipe.scheduler.config)
 
+# inpaintingPipe.to('cuda')
 inpaintingPipe.enable_model_cpu_offload()
 
 def inpainting (**props):

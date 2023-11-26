@@ -27,6 +27,8 @@ def run (job, _generator = None):
         num_inference_steps = _input.get('num_inference_steps', 70)
         guidance_scale = _input.get('guidance_scale', 13.0)
         strength = _input.get('strength', 1)
+        strength2 = _input.get('strength2')
+        upscale = _input.get('upscale')
         seed = _input.get('seed')
 
         input_image = load_image(input_url).convert('RGB')
@@ -62,17 +64,19 @@ def run (job, _generator = None):
 
         # output_image = output_image.resize(input_image.size)
 
-        output_image = upscale(output_image)
+        if upscale is not None:
+            output_image = upscale(output_image)
 
-        output_image = img2img(
-            image = output_image,
-            prompt = prompt,
-            negative_prompt = negative_prompt,
-            num_inference_steps = math.ceil(num_inference_steps / strength),
-            guidance_scale = guidance_scale,
-            strength = 0.18,
-            generator = _generator
-        ).images[0]
+        if strength2 is not None:
+            output_image = img2img(
+                image = output_image,
+                prompt = prompt,
+                negative_prompt = negative_prompt,
+                num_inference_steps = math.ceil(num_inference_steps / strength),
+                guidance_scale = guidance_scale,
+                strength = 0.29,
+                generator = _generator
+            ).images[0]
 
         if debug:
             output_image.save('sample.png')
