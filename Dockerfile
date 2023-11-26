@@ -14,7 +14,9 @@ COPY *.py .
 RUN apt-get update && apt-get install git ffmpeg libsm6 libxext6 -y
 RUN chmod +x ./scripts/install.sh
 RUN ./scripts/install.sh
+RUN python cache.py
 
 RUN rm -rf ./scripts
+RUN rm cache.py
 
 CMD python -u ./runpod_app.py
