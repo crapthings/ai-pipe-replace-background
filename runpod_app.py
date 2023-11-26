@@ -74,7 +74,7 @@ def run (job, _generator = None):
                 negative_prompt = negative_prompt,
                 num_inference_steps = math.ceil(num_inference_steps / strength),
                 guidance_scale = guidance_scale,
-                strength = 0.29,
+                strength = strength2,
                 generator = _generator
             ).images[0]
 
